@@ -39,22 +39,23 @@ exports.create = function(req, res) {
 };
 
 /* Show the current listing */
-exports.read = function(req, res) {
+exports.read = function(req, res) {      // In Mongoose: findOne()
 
   /* send back the listing as json from the request */
   res.json(req.listing);
 
 };
 
-// CHECK IF IT WORKS
 /* Update a listing */
-exports.update = function(req, res) {
+exports.update = function(req, res) {    // In Mongoose: findOneAndUpdate()
 
   var listing = req.listing;
 
   /* Replace the article's properties with the new properties found in req.body */
   if(req.body){
-    listing.body = req.body;
+    listing.code = req.body.code;
+    listing.name = req.body.name;
+    listing.address = req.body.address;
   }
 
   /* save the coordinates (located in req.results if there is an address property) */
@@ -66,7 +67,7 @@ exports.update = function(req, res) {
   }
 
   /* Save the article */
-  Listing.save(function(err){
+  listing.save(function(err){
     if(err){
       console.log(err);
       res.status(400).send(err);
@@ -78,32 +79,32 @@ exports.update = function(req, res) {
 
 };
 
-// CHECK IF IT WORKS
 /* Delete a listing */
-exports.delete = function(req, res) {
+exports.delete = function(req, res) {     // In Mongoose: findOneAndRemove()
+  var listing = req.listing;
 
-  Listing.findOneAndRemove({},function(err,deletedListing){
+  listing.remove(function(err){
     if (err) {
       console.log(err);
       res.status(400).send(err);
     }
     else {
-      res.json(deletedListing);
+      res.end();
     }
   });
 
 };
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
-exports.list = function(req, res) {
+exports.list = function(req, res) {       // In Mongoose: find()
 
-  Listing.find({}, function(err, listings){
+  Listing.find().sort('code').exec(function(err, listings){
     if(err){
       console.log(err);
       res.status(400).send(err);
     }
     else{
-      res.send(listings);
+      res.json(listings);
     }
   });
 
@@ -117,14 +118,15 @@ exports.list = function(req, res) {
         then finally call next
  */
 exports.listingByID = function(req, res, next, id) {
-  
+
   Listing.findById(id).exec(function(err, listing) {
     if(err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       req.listing = listing;
       next();
     }
   });
-  
+
 };

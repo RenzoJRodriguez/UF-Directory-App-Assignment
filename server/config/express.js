@@ -9,7 +9,7 @@ var path = require('path'),
 
 module.exports.init = function() {
   //connect to database
-  mongoose.connect(config.db.uri);
+  mongoose.connect(config.db.uri, {useMongoClient: true});
 
   //initialize app
   var app = express();
@@ -32,7 +32,9 @@ module.exports.init = function() {
   app.use('/api/listings', listingsRouter);
 
   /* go to homepage for all routes not specified */
-
+  app.get('/*', function(req, res){
+    return response.redirect('/');
+  });
 
   return app;
 };
