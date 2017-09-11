@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
 
 /* Create a listing */
 exports.create = function(req, res) {
+
   /* Instantiate a Listing */
   var listing = new Listing(req.body);
 
@@ -34,69 +35,74 @@ exports.create = function(req, res) {
       res.json(listing);
     }
   });
+
 };
 
 /* Show the current listing */
 exports.read = function(req, res) {
+
   /* send back the listing as json from the request */
   res.json(req.listing);
+
 };
 
+// CHECK IF IT WORKS
 /* Update a listing */
 exports.update = function(req, res) {
+
   var listing = req.listing;
 
-  // /* Replace the article's properties with the new properties found in req.body */
-  // if(req.body){
-  //   listing.body = req.body;
-  // }
-  //
-  // /* save the coordinates (located in req.results if there is an address property) */
-  // if(req.results){
-  //   listing.coordinates = {
-  //     latitude: req.results.lat,
-  //     longitude: req.results.lng
-  //   };
-  // }
-  //
-  // /* Save the article */
-  // listing.save(function(err){
-  //   if(err){
-  //     console.log(err);
-  //     res.status(400).send(err);
-  //   }
-  //   else{
-  //     res.json(listing);
-  //   }
-  // });
+  /* Replace the article's properties with the new properties found in req.body */
+  if(req.body){
+    listing.body = req.body;
+  }
+
+  /* save the coordinates (located in req.results if there is an address property) */
+  if(req.results){
+    listing.coordinates = {
+      latitude: req.results.lat,
+      longitude: req.results.lng
+    };
+  }
+
+  /* Save the article */
+  Listing.save(function(err){
+    if(err){
+      console.log(err);
+      res.status(400).send(err);
+    }
+    else{
+      res.json(listing);
+    }
+  });
 
 };
 
+// CHECK IF IT WORKS
 /* Delete a listing */
 exports.delete = function(req, res) {
-  var listing = req.listing;
 
-  /* Remove the article */
-  // listing.findOneAndRemove({},function(err,(deletedListing){
-  //   if (err) {
-  //     console.log(err);
-  //     res.status(400).send(err);
-  //   }
-  //   else {
-  //     res.json(deletedListing);
-  //   }
-  // });
+  Listing.findOneAndRemove({},function(err,deletedListing){
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    }
+    else {
+      res.json(deletedListing);
+    }
+  });
+
 };
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
 exports.list = function(req, res) {
-  /* Your code here */
+
   Listing.find({}, function(err, listings){
     if(err){
       console.log(err);
+      res.status(400).send(err);
     }
     else{
-      console.log(listings);
       res.send(listings);
     }
   });
@@ -111,6 +117,7 @@ exports.list = function(req, res) {
         then finally call next
  */
 exports.listingByID = function(req, res, next, id) {
+  
   Listing.findById(id).exec(function(err, listing) {
     if(err) {
       res.status(400).send(err);
@@ -119,4 +126,5 @@ exports.listingByID = function(req, res, next, id) {
       next();
     }
   });
+  
 };
