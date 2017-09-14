@@ -1,1 +1,43 @@
 <!-- Fill in this file to create a UI view for editing listing entries. -->
+<div class="row" ng-controller="ListingsController" ng-init="findOne()">
+  <div class="col-md-offset-1 col-md-10">
+
+    <div ng-show="error" class="text-danger">
+      <strong ng-bind="error"></strong>
+    </div>
+
+    <div class="jumbotron">
+      <img id="loader" ng-show="loading" src="/../../img/484.gif">
+
+      <div ng-show="listing">
+        <h2>Updating Listing</h2>
+
+        <form name="updateForm" class="form-horizontal" ng-submit="update(updateForm.$valid)">
+          <fieldset>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input class="form-control" type="text" name="name" ng-model="listing.name">
+            </div>
+
+            <div class="form-group">
+              <label for="code">Code</label>
+              <input class="form-control" type="text" name="code" ng-model="listing.code">
+            </div>
+
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input class="form-control" type="text" name="address" ng-model="listing.address">
+            </div>
+
+            <div class="form-group">
+              <input type="submit" name="" value="Submit">
+            </div>
+          </fieldset>
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
