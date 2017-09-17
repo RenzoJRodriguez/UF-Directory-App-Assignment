@@ -33,7 +33,7 @@ module.exports.init = function() {
 
   /* go to homepage for all routes not specified */
   app.get('/*', function(req, res){
-    return response.redirect('/');
+    return res.redirect('/');
   });
 
   return app;
