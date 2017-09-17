@@ -14,7 +14,7 @@ var id;
 describe('Listing Schema Unit Tests', function() {
 
   before(function(done) {
-    mongoose.connect(process.env.uri);
+    mongoose.connect(config.db.uri);
     done();
   });
 
